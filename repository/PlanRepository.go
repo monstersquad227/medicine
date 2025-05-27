@@ -4,7 +4,7 @@ import "medicine/model"
 
 type PlanRepository struct{}
 
-func (repo *PlanRepository) CreatePlan(r *model.CourseReq) (int64, error) {
+func (repo *PlanRepository) CreatePlan(r *model.CourseAndPlan) (int64, error) {
 	query := "INSERT " +
 		"INTO medicine_plan(medicine_id, amount, type, plan_time) " +
 		"VALUES (?, ?, ?, ?)"

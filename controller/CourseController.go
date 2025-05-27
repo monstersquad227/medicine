@@ -24,7 +24,7 @@ func (ctrl *CourseController) ListCourse(c *gin.Context) {
 }
 
 func (ctrl *CourseController) CreateCourse(c *gin.Context) {
-	req := &model.CourseReq{}
+	req := &model.CourseAndPlan{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return
@@ -39,7 +39,7 @@ func (ctrl *CourseController) CreateCourse(c *gin.Context) {
 }
 
 func (ctrl *CourseController) UpdateCourse(c *gin.Context) {
-	req := &model.CourseReq{}
+	req := &model.Course{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return

@@ -20,7 +20,7 @@ func (svc *CourseService) List(phone string) ([]*model.Course, error) {
 	return svc.CourseRepo.ListCourse(userID)
 }
 
-func (svc *CourseService) Create(course *model.CourseReq) (int64, error) {
+func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
 	medicineID, err := svc.CourseRepo.CreateCourse(course)
 	fmt.Println(medicineID)
 	if err != nil {
