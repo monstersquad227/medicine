@@ -1,0 +1,18 @@
+application:
+    name: medicine
+    port: 8080
+
+jwt:
+    expire: 12
+    secret: 2dd6917f09814627ab7d94c4e3532934
+
+aes:
+    secret: D0D1702422614BFAA0BD016FF5DF04AE
+
+mysql:
+    username: root
+    password: 1qaz@WSX
+    addr: 192.168.1.87
+    port: 3307
+    databases: medicine
+    charset: utf8

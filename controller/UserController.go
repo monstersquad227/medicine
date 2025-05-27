@@ -1,0 +1,50 @@
+package controller
+
+import (
+	"github.com/gin-gonic/gin"
+	"medicine/model"
+	"medicine/service"
+	"medicine/utils"
+	"net/http"
+	"strconv"
+)
+
+type UserController struct {
+	UserService service.UserInterface
+}
+
+func (ctrl *UserController) UserLogin(c *gin.Context) {
+	req := &model.User{}
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+		return
+	}
+	result, err := ctrl.UserService.UserLogin(req.PhoneNum, req.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+		return
+	}
+	c.JSON(http.StatusOK, utils.Success(result))
+}
+
+func (ctrl *UserController) UserUpdate(c *gin.Context) {
+	req := &model.User{}
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+	}
+
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+		return
+	}
+	req.ID = id
+	
+	err = ctrl.UserService.UserUpdate(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+		return
+	}
+	c.JSON(http.StatusNoContent, nil)
+}
