@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"medicine/model"
 	"medicine/repository"
 )
@@ -8,6 +9,7 @@ import (
 type CourseService struct {
 	CourseRepo *repository.CourseRepository
 	UserRepo   *repository.UserRepository
+	PlanRepo   *repository.PlanRepository
 }
 
 func (svc *CourseService) List(phone string) ([]*model.Course, error) {
@@ -18,8 +20,18 @@ func (svc *CourseService) List(phone string) ([]*model.Course, error) {
 	return svc.CourseRepo.ListCourse(userID)
 }
 
-func (svc *CourseService) Create(course *model.Course) (int64, error) {
-	return svc.CourseRepo.CreateCourse(course)
+func (svc *CourseService) Create(course *model.CourseReq) (int64, error) {
+	medicineID, err := svc.CourseRepo.CreateCourse(course)
+	fmt.Println(medicineID)
+	if err != nil {
+		return 0, err
+	}
+	course.MedicineID = int(medicineID)
+	planID, err := svc.PlanRepo.CreatePlan(course)
+	if err != nil {
+		return 0, err
+	}
+	return planID, nil
 }
 
 func (svc *CourseService) Update(course *model.Course) (int64, error) {

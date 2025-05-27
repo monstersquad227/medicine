@@ -33,7 +33,7 @@ func (repo *CourseRepository) ListCourse(userID int) ([]*model.Course, error) {
 	return data, nil
 }
 
-func (repo *CourseRepository) CreateCourse(course *model.Course) (int64, error) {
+func (repo *CourseRepository) CreateCourse(course *model.CourseReq) (int64, error) {
 	query := "INSERT " +
 		"INTO medicine_course (user_id, medicine_name, medicine_image, medicine_type, medicine_timing, course_start_time, status) " +
 		"VALUES (?, ?, ?, ?, ?, ?, ?)"

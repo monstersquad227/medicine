@@ -12,3 +12,8 @@ type Course struct {
 	CreatedAt       string  `json:"created_at,omitempty"`        // 创建时间
 	UpdatedAt       string  `json:"updated_at,omitempty"`        // 更新时间
 }
+
+type CourseReq struct {
+	Course
+	Plan
+}

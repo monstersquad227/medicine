@@ -10,7 +10,8 @@ type PlanService struct {
 }
 
 func (svc *PlanService) Create(plan *model.Plan) (int64, error) {
-	return svc.PlanRepo.CreatePlan(plan)
+	//return svc.PlanRepo.CreatePlan(plan)
+	return 0, nil
 }
 
 func (svc *PlanService) Update(plan *model.Plan) (int64, error) {

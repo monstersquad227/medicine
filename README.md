@@ -75,13 +75,16 @@ POST /medicine/course
 ##### body
 ```json
 {
-	"user_id": 1,
-	"medicine_name": "真菌王抑菌膏",
-	"medicine_image": "",
-	"medicine_type": 1,
-	"medicine_timing": 0,
-	"course_start_time": "08:00",
-	"status": 0
+  "user_id": 1,
+  "medicine_name": "真菌王抑菌膏",
+  "medicine_image": "",
+  "medicine_type": 1, // 外用
+  "medicine_timing": 0, // 不限
+  "course_start_time": "2025-05-26", // 开始日期
+  "status": 0,
+  "amount": 1, // 每日次数，每日数量
+  "type": "次", // 每次单位
+  "plan_time": "09:00" // 时间
 }
 ```
 
