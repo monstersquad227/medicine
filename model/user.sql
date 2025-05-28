@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 27/05/2025 16:18:45
+ Date: 28/05/2025 15:53:31
 */
 
 SET NAMES utf8mb4;
@@ -39,7 +39,7 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` (`id`, `nickname`, `image`, `phone_num`, `huawei_id`, `password`, `created_at`, `updated_at`) VALUES (1, '叶宁', '', '15056332824', NULL, 'mLf0p3ymtc38YTNyr3+U1bZ3xvSrq6dLPg+ecdTNDOeq2w==', '2025-05-27 10:23:59', '2025-05-27 11:10:32');
+INSERT INTO `user` (`id`, `nickname`, `image`, `phone_num`, `huawei_id`, `password`, `created_at`, `updated_at`) VALUES (1, 'HarmonyOS2', '', '15056332824', NULL, 'mLf0p3ymtc38YTNyr3+U1bZ3xvSrq6dLPg+ecdTNDOeq2w==', '2025-05-27 10:23:59', '2025-05-28 09:00:50');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

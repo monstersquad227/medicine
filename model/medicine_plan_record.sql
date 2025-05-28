@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 27/05/2025 16:18:37
+ Date: 28/05/2025 15:53:25
 */
 
 SET NAMES utf8mb4;
@@ -22,8 +22,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `medicine_plan_record`;
 CREATE TABLE `medicine_plan_record` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `medicine_name` varchar(255) NOT NULL COMMENT '药物名称',
   `actual_time` datetime NOT NULL COMMENT '实际用药时间',
   `memo` text COMMENT '打卡备注信息',
@@ -33,11 +33,5 @@ CREATE TABLE `medicine_plan_record` (
   PRIMARY KEY (`id`),
   KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用药打卡记录表';
-
--- ----------------------------
--- Records of medicine_plan_record
--- ----------------------------
-BEGIN;
-COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
