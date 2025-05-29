@@ -31,7 +31,7 @@ func (svc *UserService) UserLogin(phone, password string) (map[string]interface{
 	}
 
 	token, err := utils.GenerateToken(user.PhoneNum)
-	user.PhoneNum = utils.HidePhoneNumber(user.PhoneNum)
+	//user.PhoneNum = utils.HidePhoneNumber(user.PhoneNum)
 	if err != nil {
 		return nil, err
 	}
