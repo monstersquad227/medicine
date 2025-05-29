@@ -5,6 +5,8 @@ import "medicine/model"
 type UserInterface interface {
 	UserLogin(phone, password string) (map[string]interface{}, error)
 	UserUpdate(user *model.User) error
+	UpdateNickname(id int, nickname string) (int64, error)
+	UpdatePhone(id int, phoneNum string) (int64, error)
 }
 
 type CourseInterface interface {

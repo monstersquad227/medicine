@@ -58,3 +58,11 @@ func (svc *UserService) UserUpdate(user *model.User) error {
 	}
 	return nil
 }
+
+func (svc *UserService) UpdateNickname(id int, nickname string) (int64, error) {
+	return svc.UserRepo.UpdateNickname(id, nickname)
+}
+
+func (svc *UserService) UpdatePhone(id int, phoneNum string) (int64, error) {
+	return svc.UserRepo.UpdatePhone(id, phoneNum)
+}

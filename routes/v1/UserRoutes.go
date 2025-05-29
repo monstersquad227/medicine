@@ -17,4 +17,6 @@ func UserRegister(api *gin.RouterGroup) {
 
 	api.POST("user/login", ctrl.UserLogin)
 	api.PUT("user/:id", ctrl.UserUpdate)
+	api.PUT("user/:id/nickname", ctrl.UserUpdateNickname)
+	api.PUT("user/:id/phone", ctrl.UserUpdatePhone)
 }

@@ -55,3 +55,31 @@ func (repo *UserRepository) UserUpdate(user *model.User) (bool, error) {
 
 	return rowsAffected > 0, nil
 }
+
+func (repo *UserRepository) UpdateNickname(id int, nickname string) (int64, error) {
+	query := "UPDATE user " +
+		"SET nickname = ? WHERE id = ?"
+	exec, err := MysqlClient.Exec(query, nickname, id)
+	if err != nil {
+		return 0, err
+	}
+	rowsAffected, err := exec.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	return rowsAffected, nil
+}
+
+func (repo *UserRepository) UpdatePhone(id int, phoneNum string) (int64, error) {
+	query := "UPDATE user " +
+		"SET phone_num = ? WHERE id = ?"
+	exec, err := MysqlClient.Exec(query, phoneNum, id)
+	if err != nil {
+		return 0, err
+	}
+	rowsAffected, err := exec.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	return rowsAffected, nil
+}
