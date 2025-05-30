@@ -4,27 +4,42 @@ import "medicine/model"
 
 type CourseRepository struct{}
 
-func (repo *CourseRepository) ListCourse(userID int) ([]*model.Course, error) {
-	query := "SELECT id, medicine_name, medicine_image, medicine_type, medicine_timing, course_start_time, status, created_at, updated_at " +
-		"FROM medicine_course " +
-		"WHERE user_id = ? " +
-		"ORDER BY id ASC"
+func (repo *CourseRepository) ListCourse(userID int) ([]*model.CourseAndPlan, error) {
+	//query := "SELECT id, medicine_name, medicine_image, medicine_type, medicine_timing, course_start_time, status, created_at, updated_at " +
+	//	"FROM medicine_course " +
+	//	"WHERE user_id = ? " +
+	//	"ORDER BY id ASC"
+	query := "SELECT " +
+		"    mc.medicine_name, " +
+		"    mc.medicine_image, " +
+		"    mc.medicine_type, " +
+		"    mc.medicine_timing, " +
+		"    mc.course_start_time, " +
+		"    mc.status, " +
+		"    ( " +
+		"        SELECT COUNT(*) " +
+		"        FROM medicine_plan p " +
+		"        WHERE p.medicine_id = mc.id " +
+		"    ) AS frequency " +
+		"FROM " +
+		"    medicine_course mc " +
+		"WHERE " +
+		"    mc.user_id = ? "
 	rows, err := MysqlClient.Query(query, userID)
 	if err != nil {
 		return nil, err
 	}
-	data := make([]*model.Course, 0)
+	data := make([]*model.CourseAndPlan, 0)
 	for rows.Next() {
-		obj := &model.Course{}
-		err := rows.Scan(&obj.ID,
+		obj := &model.CourseAndPlan{}
+		err := rows.Scan(
 			&obj.MedicineName,
 			&obj.MedicineImage,
 			&obj.MedicineType,
 			&obj.MedicineTiming,
 			&obj.CourseStartTime,
 			&obj.Status,
-			&obj.CreatedAt,
-			&obj.UpdatedAt)
+			&obj.Frequency)
 		if err != nil {
 			return nil, err
 		}

@@ -10,7 +10,7 @@ type UserInterface interface {
 }
 
 type CourseInterface interface {
-	List(phone string) ([]*model.Course, error)
+	List(phone string) ([]*model.CourseAndPlan, error)
 	Create(medicineCourse *model.CourseAndPlan) (int64, error)
 	Update(course *model.Course) (int64, error)
 	PatchCourseStatus(course *model.Course) (int64, error)

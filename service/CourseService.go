@@ -12,7 +12,7 @@ type CourseService struct {
 	PlanRepo   *repository.PlanRepository
 }
 
-func (svc *CourseService) List(phone string) ([]*model.Course, error) {
+func (svc *CourseService) List(phone string) ([]*model.CourseAndPlan, error) {
 	userID, err := svc.UserRepo.GetUserIDByPhoneNum(phone)
 	if err != nil {
 		return nil, err
