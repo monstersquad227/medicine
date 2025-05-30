@@ -17,6 +17,7 @@ type CourseInterface interface {
 }
 
 type PlanServiceInterface interface {
+	List(userID int) ([]*model.CourseAndPlan, error)
 	Create(plan *model.Plan) (int64, error)
 	Update(plan *model.Plan) (int64, error)
 }
