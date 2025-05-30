@@ -20,3 +20,7 @@ type PlanServiceInterface interface {
 	Create(plan *model.Plan) (int64, error)
 	Update(plan *model.Plan) (int64, error)
 }
+
+type RecordServiceInterface interface {
+	Fetch(userID int) ([]*model.RecordModel, error)
+}

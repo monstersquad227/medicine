@@ -27,11 +27,19 @@ func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
 		return 0, err
 	}
 	course.MedicineID = int(medicineID)
-	planID, err := svc.PlanRepo.CreatePlan(course)
-	if err != nil {
-		return 0, err
+	planInsertCount := 0
+	for i := 0; i < course.Frequency; i++ {
+		_, err = svc.PlanRepo.CreatePlan(course)
+		if err != nil {
+			return 0, err
+		}
+		planInsertCount++
 	}
-	return planID, nil
+	//planID, err := svc.PlanRepo.CreatePlan(course)
+	//if err != nil {
+	//	return 0, err
+	//}
+	return int64(planInsertCount), nil
 }
 
 func (svc *CourseService) Update(course *model.Course) (int64, error) {

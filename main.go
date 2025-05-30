@@ -25,6 +25,7 @@ func main() {
 	v1.UserRegister(Application.Group(config.GlobalConfig.Application.Name))
 	v1.CourseRegister(Application.Group(config.GlobalConfig.Application.Name))
 	v1.PlanRegister(Application.Group(config.GlobalConfig.Application.Name))
+	v1.RecordRegister(Application.Group(config.GlobalConfig.Application.Name))
 
 	// 项目启动
 	err := Application.Run(":" + config.GlobalConfig.Application.Port)
