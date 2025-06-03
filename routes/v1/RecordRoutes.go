@@ -15,4 +15,5 @@ func RecordRegister(api *gin.RouterGroup) {
 		},
 	}
 	api.GET("record/:id", ctrl.List)
+	api.POST("/record/:id", ctrl.Create)
 }

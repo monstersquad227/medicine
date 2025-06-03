@@ -11,9 +11,10 @@ func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	data := make([]*model.RecordModel, 0)
-	if rows.Next() {
-		var obj model.RecordModel
+	for rows.Next() {
+		obj := model.RecordModel{}
 		err = rows.Scan(&obj.ID, &obj.MedicineName, &obj.ActualTime, &obj.Memo, &obj.Status)
 		if err != nil {
 			return nil, err
@@ -21,4 +22,15 @@ func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
 		data = append(data, &obj)
 	}
 	return data, nil
+}
+
+func (repo *RecordRepository) Create(record *model.RecordModel) (int64, error) {
+	query := "INSERT " +
+		"INTO medicine_plan_record(user_id, medicine_name, actual_time, memo, status) " +
+		"VALUES (?, ?, ?, ?, ?)"
+	result, err := MysqlClient.Exec(query, record.UserID, record.MedicineName, record.ActualTime, record.Memo, record.Status)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
 }
