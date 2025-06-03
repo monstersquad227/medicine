@@ -28,7 +28,8 @@ func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
 	}
 	course.MedicineID = int(medicineID)
 	planInsertCount := 0
-	for i := 0; i < course.Frequency; i++ {
+	for i := 0; i < len(course.CourseStartTimes); i++ {
+		course.PlanTime = course.CourseStartTimes[i]
 		_, err = svc.PlanRepo.CreatePlan(course)
 		if err != nil {
 			return 0, err

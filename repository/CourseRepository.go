@@ -19,7 +19,7 @@ func (repo *CourseRepository) ListCourse(userID int) ([]*model.CourseAndPlan, er
 		"    ( " +
 		"        SELECT COUNT(*) " +
 		"        FROM medicine_plan p " +
-		"        WHERE p.medicine_id = mc.id " +
+		"        WHERE p.medicine_id = mc.id" +
 		"    ) AS frequency " +
 		"FROM " +
 		"    medicine_course mc " +
