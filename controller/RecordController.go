@@ -20,7 +20,8 @@ func (ctrl *RecordController) List(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return
 	}
-	result, err := ctrl.RecordService.Fetch(id)
+	//result, err := ctrl.RecordService.Fetch(id)
+	result, err := ctrl.RecordService.FetchV2(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
 		return
