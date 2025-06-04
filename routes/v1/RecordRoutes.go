@@ -14,6 +14,7 @@ func RecordRegister(api *gin.RouterGroup) {
 			RecordRepository: &repository.RecordRepository{},
 		},
 	}
-	api.GET("record/:id", ctrl.List)
-	api.POST("/record/:id", ctrl.Create)
+	api.GET("record/:id", ctrl.ListRecord)
+	api.POST("/record/:id", ctrl.CreateRecord)
+	api.PUT("/record/:id", ctrl.UpdateRecord)
 }

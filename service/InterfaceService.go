@@ -26,4 +26,5 @@ type RecordServiceInterface interface {
 	Fetch(userID int) ([]*model.RecordModel, error)
 	FetchV2(userID int) (interface{}, error)
 	Create(userID int, record *model.RecordModel) (int64, error)
+	Update(record *model.RecordModel) (int64, error)
 }

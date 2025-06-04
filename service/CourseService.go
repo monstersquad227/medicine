@@ -1,9 +1,9 @@
 package service
 
 import (
-	"fmt"
 	"medicine/model"
 	"medicine/repository"
+	"strings"
 )
 
 type CourseService struct {
@@ -22,11 +22,14 @@ func (svc *CourseService) List(phone string) ([]*model.CourseAndPlan, error) {
 }
 
 func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
+	dateTimes := strings.Split(course.CourseStartTime, " ")
+	date := dateTimes[0]
+
 	medicineID, err := svc.CourseRepo.CreateCourse(course)
-	fmt.Println(medicineID)
 	if err != nil {
 		return 0, err
 	}
+
 	course.MedicineID = int(medicineID)
 	planInsertCount := 0
 	for i := 0; i < len(course.CourseStartTimes); i++ {
@@ -39,6 +42,7 @@ func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
 			UserID:       course.UserId,
 			PlanID:       int(planID),
 			MedicineName: course.MedicineName,
+			ActualTime:   date + " " + course.CourseStartTimes[i],
 			Memo:         nil,
 			IsChecked:    0,
 			Status:       0,

@@ -1,10 +1,12 @@
 package service
 
 import (
+	"math"
 	"medicine/model"
 	"medicine/repository"
 	"sort"
 	"strings"
+	"time"
 )
 
 type RecordService struct {
@@ -35,10 +37,10 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 	groupMap := make(map[string][]ContentDetail)
 
 	for _, value := range result {
-		if value.ActualTime == nil || *value.ActualTime == "" {
-			continue // 跳过该条记录，而不是整体中止
-		}
-		dateOnly := strings.Split(*value.ActualTime, " ")[0]
+		//if value.ActualTime == nil || *value.ActualTime == "" {
+		//	continue // 跳过该条记录，而不是整体中止
+		//}
+		dateOnly := strings.Split(value.ActualTime, " ")[0]
 
 		item := ContentDetail{
 			ID:           value.ID,
@@ -73,4 +75,32 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 func (svc *RecordService) Create(userID int, record *model.RecordModel) (int64, error) {
 	record.UserID = userID
 	return svc.RecordRepository.Create(record)
+}
+
+func (svc *RecordService) Update(record *model.RecordModel) (int64, error) {
+	/*
+		数据库中第一次插入的actual_time 为添加 course 的时间
+		计算数据库记录的记录的actual_time 与 实际传入的 actual_time 时间相差多少分钟，15内 status=0 正常打卡 反之异常
+	*/
+	actualTime, err := svc.RecordRepository.GetActualTimeByPlanIDANDUserID(record.PlanID, record.UserID)
+	if err != nil {
+		return 0, err
+	}
+	actualTimeParse, err := time.Parse("2006-01-02 15:04:05", actualTime)
+	if err != nil {
+		return 0, err
+	}
+	recordActualTimeParse, err := time.Parse("2006-01-02 15:04:05", record.ActualTime)
+	if err != nil {
+		return 0, err
+	}
+	diff := recordActualTimeParse.Sub(actualTimeParse)
+	minutes := math.Abs(diff.Minutes())
+	if minutes <= 15 {
+		record.Status = 0
+	} else {
+		record.Status = 1
+	}
+
+	return svc.RecordRepository.Update(record)
 }
