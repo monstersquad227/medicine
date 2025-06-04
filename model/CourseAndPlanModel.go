@@ -3,6 +3,7 @@ package model
 type CourseAndPlan struct {
 	CoursePartial
 	PlanPartial
+	PlanID           int      `json:"plan_id,omitempty"`
 	Frequency        int      `json:"frequency,omitempty"`
 	CourseStartTimes []string `json:"course_start_times,omitempty"`
 }

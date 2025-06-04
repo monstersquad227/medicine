@@ -12,7 +12,8 @@ func (repo *PlanRepository) ListPlan(id int) ([]*model.CourseAndPlan, error) {
 		"    mc.medicine_timing, " +
 		"    mp.amount, " +
 		"    mp.type, " +
-		"    mp.plan_time " +
+		"    mp.plan_time, " +
+		"    mp.id as plan_id " +
 		"FROM " +
 		"	medicine_course mc " +
 		"LEFT JOIN " +
@@ -29,7 +30,7 @@ func (repo *PlanRepository) ListPlan(id int) ([]*model.CourseAndPlan, error) {
 	data := make([]*model.CourseAndPlan, 0)
 	for rows.Next() {
 		obj := model.CourseAndPlan{}
-		if err = rows.Scan(&obj.MedicineName, &obj.MedicineTiming, &obj.Amount, &obj.Type, &obj.PlanTime); err != nil {
+		if err = rows.Scan(&obj.MedicineName, &obj.MedicineTiming, &obj.Amount, &obj.Type, &obj.PlanTime, &obj.PlanID); err != nil {
 			return nil, err
 		}
 		data = append(data, &obj)
