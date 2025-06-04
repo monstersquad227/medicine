@@ -6,7 +6,7 @@ type RecordRepository struct{}
 
 func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
 	query := "SELECT id, medicine_name, actual_time, memo, status " +
-		"FROM medicine_plan_record WHERE user_id = ?"
+		"FROM medicine_plan_record WHERE user_id = ? AND is_checked = 1"
 	rows, err := MysqlClient.Query(query, userId)
 	if err != nil {
 		return nil, err
