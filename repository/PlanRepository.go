@@ -13,11 +13,21 @@ func (repo *PlanRepository) ListPlan(id int) ([]*model.CourseAndPlan, error) {
 		"    mp.amount, " +
 		"    mp.type, " +
 		"    mp.plan_time, " +
-		"    mp.id as plan_id " +
+		"    mp.id as plan_id, " +
+		"    IF(mpr.is_checked = 1, 1, 0) AS is_checked " +
 		"FROM " +
 		"	medicine_course mc " +
 		"LEFT JOIN " +
 		"   medicine_plan mp ON mp.medicine_id = mc.id " +
+		"LEFT JOIN ( " +
+		"	SELECT " +
+		"		plan_id, " +
+		"		MAX(is_checked) AS is_checked " +
+		"	FROM " +
+		"		medicine_plan_record " +
+		"	GROUP BY " +
+		"		plan_id" +
+		") mpr ON mpr.plan_id = mp.id " +
 		"WHERE " +
 		"    mc.user_id = ? " +
 		"ORDER BY " +
@@ -30,7 +40,7 @@ func (repo *PlanRepository) ListPlan(id int) ([]*model.CourseAndPlan, error) {
 	data := make([]*model.CourseAndPlan, 0)
 	for rows.Next() {
 		obj := model.CourseAndPlan{}
-		if err = rows.Scan(&obj.MedicineName, &obj.MedicineTiming, &obj.Amount, &obj.Type, &obj.PlanTime, &obj.PlanID); err != nil {
+		if err = rows.Scan(&obj.MedicineName, &obj.MedicineTiming, &obj.Amount, &obj.Type, &obj.PlanTime, &obj.PlanID, &obj.IsChecked); err != nil {
 			return nil, err
 		}
 		data = append(data, &obj)
