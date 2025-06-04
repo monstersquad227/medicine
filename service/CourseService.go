@@ -10,6 +10,7 @@ type CourseService struct {
 	CourseRepo *repository.CourseRepository
 	UserRepo   *repository.UserRepository
 	PlanRepo   *repository.PlanRepository
+	RecordRepo *repository.RecordRepository
 }
 
 func (svc *CourseService) List(phone string) ([]*model.CourseAndPlan, error) {
@@ -30,7 +31,19 @@ func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {
 	planInsertCount := 0
 	for i := 0; i < len(course.CourseStartTimes); i++ {
 		course.PlanTime = course.CourseStartTimes[i]
-		_, err = svc.PlanRepo.CreatePlan(course)
+		planID, err := svc.PlanRepo.CreatePlan(course)
+		if err != nil {
+			return 0, err
+		}
+		record := &model.RecordModel{
+			UserID:       course.UserId,
+			PlanID:       int(planID),
+			MedicineName: course.MedicineName,
+			Memo:         nil,
+			IsChecked:    0,
+			Status:       0,
+		}
+		_, err = svc.RecordRepo.Create(record)
 		if err != nil {
 			return 0, err
 		}

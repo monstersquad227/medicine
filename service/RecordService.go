@@ -35,7 +35,10 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 	groupMap := make(map[string][]ContentDetail)
 
 	for _, value := range result {
-		dateOnly := strings.Split(value.ActualTime, " ")[0]
+		if value.ActualTime == nil || *value.ActualTime == "" {
+			continue // 跳过该条记录，而不是整体中止
+		}
+		dateOnly := strings.Split(*value.ActualTime, " ")[0]
 
 		item := ContentDetail{
 			ID:           value.ID,
@@ -59,6 +62,10 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 	sort.Slice(groupedResult, func(i, j int) bool {
 		return groupedResult[i].ActualDate > groupedResult[j].ActualDate
 	})
+
+	if len(groupedResult) == 0 {
+		groupedResult = []GroupedContentItem{}
+	}
 
 	return groupedResult, nil
 }

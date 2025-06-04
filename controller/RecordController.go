@@ -26,6 +26,7 @@ func (ctrl *RecordController) List(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
 		return
 	}
+
 	c.JSON(http.StatusOK, utils.Success(result))
 }
 

@@ -26,9 +26,9 @@ func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
 
 func (repo *RecordRepository) Create(record *model.RecordModel) (int64, error) {
 	query := "INSERT " +
-		"INTO medicine_plan_record(user_id, medicine_name, actual_time, memo, status) " +
+		"INTO medicine_plan_record(user_id, plan_id, medicine_name, memo, status) " +
 		"VALUES (?, ?, ?, ?, ?)"
-	result, err := MysqlClient.Exec(query, record.UserID, record.MedicineName, record.ActualTime, record.Memo, record.Status)
+	result, err := MysqlClient.Exec(query, record.UserID, record.PlanID, record.MedicineName, record.Memo, record.Status)
 	if err != nil {
 		return 0, err
 	}
