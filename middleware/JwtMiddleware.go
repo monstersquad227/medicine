@@ -12,6 +12,7 @@ var whiteList = map[string]bool{
 	"/medicine/demo/testPost":   true,
 	"/medicine/actuator/health": true,
 	"/medicine/user/login":      true,
+	"/medicine/user/loginV2":    true,
 }
 
 // Jwt 鉴权中间件

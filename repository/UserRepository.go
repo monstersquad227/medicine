@@ -6,6 +6,37 @@ import (
 
 type UserRepository struct{}
 
+func (repo *UserRepository) CreateUser(user *model.User) (int64, error) {
+	query := "INSERT " +
+		"INTO user(phone_num, huawei_id, password) " +
+		"VALUES (?, ?, ?)"
+	exec, err := MysqlClient.Exec(query, user.PhoneNum, user.HuaweiID, user.Password)
+	if err != nil {
+		return 0, err
+	}
+	return exec.LastInsertId()
+}
+
+func (repo *UserRepository) GetUserById(id int64) (*model.User, error) {
+	user := &model.User{}
+	query := "SELECT id, nickname, image, phone_num, huawei_id, password, created_at, updated_at " +
+		"FROM user WHERE id = ?"
+	err := MysqlClient.QueryRow(query, id).Scan(
+		&user.ID,
+		&user.NickName,
+		&user.Image,
+		&user.PhoneNum,
+		&user.HuaweiID,
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func (repo *UserRepository) GetUserInfo(phone string) (*model.User, error) {
 	user := &model.User{}
 	query := "SELECT * " +

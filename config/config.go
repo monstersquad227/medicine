@@ -25,6 +25,12 @@ type Config struct {
 		Databases string `mapstructure:"databases"`
 		Charset   string `mapstructure:"charset"`
 	}
+	Huawei struct {
+		Oauth2URL    string `mapstructure:"oauth2_url"`
+		ClientID     string `mapstructure:"client_id"`
+		ClientSecret string `mapstructure:"client_secret"`
+		AccountUrl   string `mapstructure:"account_url"`
+	}
 }
 
 var GlobalConfig Config
