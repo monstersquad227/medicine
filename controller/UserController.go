@@ -35,7 +35,7 @@ func (ctrl *UserController) UserLoginV2(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return
 	}
-	result, err := ctrl.UserService.UserLoginV2(req.AuthorizationCode)
+	result, err := ctrl.UserService.UserLoginV22(req.AuthorizationCode)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
 		return

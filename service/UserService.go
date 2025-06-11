@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"medicine/model"
 	"medicine/repository"
 	"medicine/utils"
@@ -42,53 +43,49 @@ func (svc *UserService) UserLogin(phone, password string) (map[string]interface{
 	return resp, nil
 }
 
-func (svc *UserService) UserLoginV2(code string) (map[string]interface{}, error) {
+func (svc *UserService) UserLoginV22(code string) (map[string]interface{}, error) {
 
 	accessToken, err := utils.GetHuaweiAccessToken(code)
+	if err != nil || accessToken == "" {
+		return nil, err
+	}
 
-	if err != nil {
-		return nil, err
-	}
-	if accessToken == "" {
-		return nil, err
-	}
 	UnionID, LoginMobileNumber, err := utils.GetHuaweiUserInfo(accessToken)
-	if err != nil {
+	if err != nil || UnionID == "" || LoginMobileNumber == "" {
 		return nil, err
 	}
 
-	if UnionID == "" || LoginMobileNumber == "" {
-		return nil, err
-	}
-
-	encryptCode, err := utils.EncryptAESGCM(accessToken)
+	encryptToken, err := utils.EncryptAESGCM(accessToken)
 	if err != nil {
 		return nil, err
 	}
 
 	user := model.User{}
 	user.HuaweiID = &UnionID
-	user.Password = encryptCode
+	user.Password = encryptToken
 	user.PhoneNum = LoginMobileNumber
 
-	id, err := svc.UserRepo.CreateUser(&user)
+	insertID, err := svc.UserRepo.CreateUser(&user)
 	if err != nil {
 		return nil, err
 	}
 
-	userInfo, err := svc.UserRepo.GetUserById(id)
+	userInfo, err := svc.UserRepo.GetUserById(insertID)
 	if err != nil {
 		return nil, err
 	}
 
 	token, err := utils.GenerateToken(user.PhoneNum)
+	fmt.Println("token: ", token)
 	if err != nil {
 		return nil, err
 	}
+
 	resp := map[string]interface{}{
 		"token": token,
 		"user":  userInfo,
 	}
+
 	return resp, nil
 }
 

@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"medicine/config"
 	"net/http"
@@ -60,7 +59,6 @@ func GetHuaweiUserInfo(accessToken string) (string, string, error) {
 	body := url.Values{}
 	body.Set("access_token", accessToken)
 
-	fmt.Println("URL", config.GlobalConfig.Huawei.AccountUrl)
 	request, err := http.NewRequest(http.MethodPost, config.GlobalConfig.Huawei.AccountUrl, strings.NewReader(body.Encode()))
 	if err != nil {
 		return "", "", err
