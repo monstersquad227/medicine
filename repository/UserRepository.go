@@ -9,7 +9,9 @@ type UserRepository struct{}
 func (repo *UserRepository) CreateUser(user *model.User) (int64, error) {
 	query := "INSERT " +
 		"INTO user(phone_num, huawei_id, password) " +
-		"VALUES (?, ?, ?)"
+		"VALUES (?, ?, ?) " +
+		"ON DUPLICATE KEY UPDATE " +
+		"password = VALUES(password) "
 	exec, err := MysqlClient.Exec(query, user.PhoneNum, user.HuaweiID, user.Password)
 	if err != nil {
 		return 0, err
