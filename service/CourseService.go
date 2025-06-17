@@ -18,7 +18,8 @@ func (svc *CourseService) List(phone string) ([]*model.CourseAndPlan, error) {
 	if err != nil {
 		return nil, err
 	}
-	return svc.CourseRepo.ListCourse(userID)
+	//return svc.CourseRepo.ListCourse(userID)
+	return svc.CourseRepo.ListCourseV2(userID)
 }
 
 func (svc *CourseService) Create(course *model.CourseAndPlan) (int64, error) {

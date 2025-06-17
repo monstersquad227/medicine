@@ -48,6 +48,50 @@ func (repo *CourseRepository) ListCourse(userID int) ([]*model.CourseAndPlan, er
 	return data, nil
 }
 
+func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, error) {
+	query := "SELECT " +
+		"    mc.medicine_name, " +
+		"    mc.medicine_image, " +
+		"    mc.medicine_type, " +
+		"    mc.medicine_timing, " +
+		"    mc.course_start_time, " +
+		"    mc.status, " +
+		"    GROUP_CONCAT(mp.plan_time ORDER BY mp.plan_time) AS plan_times, " +
+		"    COUNT(mp.plan_time) AS frequency " +
+		"FROM " +
+		"    medicine_course mc " +
+		"LEFT JOIN " +
+		"    medicine_plan mp ON mp.medicine_id = mc.id " +
+		"WHERE " +
+		"    mc.user_id = ? " +
+		"GROUP BY " +
+		"    mc.id " +
+		"ORDER BY " +
+		"    mc.id ASC"
+	rows, err := MysqlClient.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	data := make([]*model.CourseAndPlan, 0)
+	for rows.Next() {
+		obj := &model.CourseAndPlan{}
+		err := rows.Scan(&obj.MedicineName,
+			&obj.MedicineImage,
+			&obj.MedicineType,
+			&obj.MedicineTiming,
+			&obj.CourseStartTime,
+			&obj.Status,
+			&obj.PlanTimes,
+			&obj.Frequency,
+		)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, obj)
+	}
+	return data, nil
+}
+
 func (repo *CourseRepository) CreateCourse(course *model.CourseAndPlan) (int64, error) {
 	query := "INSERT " +
 		"INTO medicine_course (user_id, medicine_name, medicine_image, medicine_type, medicine_timing, course_start_time, status) " +

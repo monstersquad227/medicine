@@ -7,6 +7,7 @@ type CourseAndPlan struct {
 	IsChecked        int      `json:"is_checked"`
 	Frequency        int      `json:"frequency,omitempty"`
 	CourseStartTimes []string `json:"course_start_times,omitempty"`
+	PlanTimes        string   `json:"plan_times,omitempty"`
 }
 
 type CourseAndPlanAndRecord struct {
