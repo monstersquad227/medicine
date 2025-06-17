@@ -100,3 +100,18 @@ func (repo *CourseRepository) UpdateCourseStatusByID(course *model.Course) (int6
 	}
 	return updatedID, err
 }
+
+func (repo *CourseRepository) RemoveCourse(course *model.Course) (int64, error) {
+	query := "DELETE " +
+		"FROM medicine_course " +
+		"WHERE medicine_name = ? AND user_id = ?"
+	result, err := MysqlClient.Exec(query, course.MedicineName, course.UserId)
+	if err != nil {
+		return 0, err
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	return affected, nil
+}

@@ -81,3 +81,17 @@ func (ctrl *CourseController) PatchCourseStatus(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, utils.Success(result))
 }
+
+func (ctrl *CourseController) DeleteCourse(c *gin.Context) {
+	req := &model.Course{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+		return
+	}
+	result, err := ctrl.CourseService.Delete(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+		return
+	}
+	c.JSON(http.StatusOK, utils.Success(result))
+}

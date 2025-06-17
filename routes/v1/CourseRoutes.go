@@ -18,4 +18,5 @@ func CourseRegister(api *gin.RouterGroup) {
 	api.POST("course", ctrl.CreateCourse)           // √
 	api.PUT("course/:id", ctrl.UpdateCourse)        // 有问题 需要改
 	api.PATCH("course/:id", ctrl.PatchCourseStatus) // √,只改 course 的 status 没问题
+	api.DELETE("course", ctrl.DeleteCourse)
 }

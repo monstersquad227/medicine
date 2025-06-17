@@ -3,7 +3,7 @@ application:
     port: 8081
 
 jwt:
-    expire: 12
+    expire: 8760
     secret: 2dd6917f09814627ab7d94c4e3532934
 
 aes:
