@@ -57,7 +57,8 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 		"    mc.course_start_time, " +
 		"    mc.status, " +
 		"    GROUP_CONCAT(mp.plan_time ORDER BY mp.plan_time) AS plan_times, " +
-		"    COUNT(mp.plan_time) AS frequency " +
+		"    COUNT(mp.plan_time) AS frequency, " +
+		"    ANY_VALUE(mp.type) AS type " +
 		"FROM " +
 		"    medicine_course mc " +
 		"LEFT JOIN " +
@@ -83,6 +84,7 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 			&obj.Status,
 			&obj.PlanTimes,
 			&obj.Frequency,
+			&obj.Type,
 		)
 		if err != nil {
 			return nil, err
