@@ -51,14 +51,14 @@ func (repo *CourseRepository) ListCourse(userID int) ([]*model.CourseAndPlan, er
 func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, error) {
 	query := "SELECT " +
 		"    mc.medicine_name, " +
-		"    mc.medicine_image, " +
 		"    mc.medicine_type, " +
-		"    mc.medicine_timing, " +
 		"    mc.course_start_time, " +
+		"    mc.medicine_timing, " +
 		"    mc.status, " +
 		"    GROUP_CONCAT(mp.plan_time ORDER BY mp.plan_time) AS plan_times, " +
 		"    COUNT(mp.plan_time) AS frequency, " +
-		"    ANY_VALUE(mp.type) AS type " +
+		"    ANY_VALUE(mp.type) AS type, " +
+		"	 ANY_VALUE(mp.amount) AS amount " +
 		"FROM " +
 		"    medicine_course mc " +
 		"LEFT JOIN " +
@@ -77,14 +77,14 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 	for rows.Next() {
 		obj := &model.CourseAndPlan{}
 		err := rows.Scan(&obj.MedicineName,
-			&obj.MedicineImage,
 			&obj.MedicineType,
-			&obj.MedicineTiming,
 			&obj.CourseStartTime,
+			&obj.MedicineTiming,
 			&obj.Status,
 			&obj.PlanTimes,
 			&obj.Frequency,
 			&obj.Type,
+			&obj.Amount,
 		)
 		if err != nil {
 			return nil, err
