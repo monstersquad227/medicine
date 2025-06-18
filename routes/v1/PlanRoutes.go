@@ -15,7 +15,7 @@ func PlanRegister(api *gin.RouterGroup) {
 	}
 
 	//api.POST("plan", ctrl.CreatePlan) 创建用药计划不对外
-	api.GET("plan/:id", ctrl.ListPlan)
+	api.GET("plan/:id", ctrl.ListPlanV2)
 	api.PUT("plan/:id", ctrl.UpdatePlan)
 	api.PATCH("plan/:id", ctrl.PatchPlan)
 
