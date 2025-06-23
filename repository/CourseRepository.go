@@ -50,6 +50,7 @@ func (repo *CourseRepository) ListCourse(userID int) ([]*model.CourseAndPlan, er
 
 func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, error) {
 	query := "SELECT " +
+		"    mc.id AS course_id, " +
 		"    mc.medicine_name, " +
 		"    mc.medicine_type, " +
 		"    mc.course_start_time, " +
@@ -76,7 +77,9 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 	data := make([]*model.CourseAndPlan, 0)
 	for rows.Next() {
 		obj := &model.CourseAndPlan{}
-		err := rows.Scan(&obj.MedicineName,
+		err := rows.Scan(
+			&obj.CourseID,
+			&obj.MedicineName,
 			&obj.MedicineType,
 			&obj.CourseStartTime,
 			&obj.MedicineTiming,

@@ -3,6 +3,7 @@ package model
 type CourseAndPlan struct {
 	CoursePartial
 	PlanPartial
+	CourseID         int      `json:"course_id,omitempty"`
 	PlanID           int      `json:"plan_id,omitempty"`
 	RecordID         int      `json:"record_id,omitempty"`
 	IsChecked        int      `json:"is_checked"`
