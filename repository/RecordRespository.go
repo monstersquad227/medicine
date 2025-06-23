@@ -38,8 +38,8 @@ func (repo *RecordRepository) Create(record *model.RecordModel) (int64, error) {
 func (repo *RecordRepository) Update(record *model.RecordModel) (int64, error) {
 	query := "UPDATE medicine_plan_record " +
 		"SET actual_time = ?, is_checked = ?, status = ? " +
-		"WHERE plan_id = ? AND user_id = ? "
-	result, err := MysqlClient.Exec(query, record.ActualTime, record.IsChecked, record.Status, record.PlanID, record.UserID)
+		"WHERE plan_id = ? AND user_id = ? AND id = ? "
+	result, err := MysqlClient.Exec(query, record.ActualTime, record.IsChecked, record.Status, record.PlanID, record.UserID, record.ID)
 	if err != nil {
 		return 0, err
 	}
