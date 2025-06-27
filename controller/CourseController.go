@@ -60,6 +60,21 @@ func (ctrl *CourseController) UpdateCourse(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.Success(result))
 }
 
+func (ctrl *CourseController) UpdateCourseV2(c *gin.Context) {
+	req := &model.CourseAndPlan{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+		return
+	}
+
+	result, err := ctrl.CourseService.Modify(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+		return
+	}
+	c.JSON(http.StatusOK, utils.Success(result))
+}
+
 func (ctrl *CourseController) PatchCourseStatus(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)

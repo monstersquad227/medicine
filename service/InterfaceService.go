@@ -14,6 +14,7 @@ type CourseInterface interface {
 	List(phone string) ([]*model.CourseAndPlan, error)
 	Create(medicineCourse *model.CourseAndPlan) (int64, error)
 	Update(course *model.Course) (int64, error)
+	Modify(course *model.CourseAndPlan) (int64, error)
 	Delete(course *model.Course) (int64, error)
 	PatchCourseStatus(course *model.Course) (int64, error)
 }
