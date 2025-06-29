@@ -1,6 +1,10 @@
 package repository
 
-import "medicine/model"
+import (
+	"fmt"
+	"medicine/model"
+	"strings"
+)
 
 type CourseRepository struct{}
 
@@ -137,77 +141,140 @@ func (repo *CourseRepository) UpdateCourse(course *model.Course) (int64, error) 
 }
 
 func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64, error) {
-	// 更新Course用例
-	query1 := "UPDATE medicine_course " +
-		"SET medicine_type = ?, medicine_timing = ?, course_start_time = ? " +
+	dateTimes := strings.Split(course.CourseStartTime, " ")
+	date := dateTimes[0]
+
+	query1 := "UPDATE " +
+		"medicine_course SET medicine_type = ?, medicine_timing = ?, course_start_time = ? " +
 		"WHERE id = ?"
-	// 删除plan记录
+
 	query2 := "DELETE " +
-		"FROM medicine_plan " +
-		"WHERE medicine_id = ? "
-	// 重新插入 plan 记录
+		"FROM medicine_plan WHERE medicine_id = ?"
+
 	query3 := "INSERT " +
 		"INTO medicine_plan (medicine_id, amount, type, plan_time) " +
-		"VALUES (?, ?, ?, ?) "
-	// 插入记录
+		"VALUES (?, ?, ?, ?)"
+
 	query4 := "INSERT " +
 		"INTO medicine_plan_record(user_id, plan_id, actual_time, medicine_name, memo, status) " +
 		"VALUES (?, ?, ?, ?, ?, ?)"
 
-	begin, err := MysqlClient.Begin()
+	tx, err := MysqlClient.Begin()
 	if err != nil {
 		return 0, err
 	}
-	// 更新用药方案
-	_, err = begin.Exec(query1, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID)
-	if err != nil {
-		err := begin.Rollback()
-		if err != nil {
-			return 0, err
-		}
+
+	// 更新 course
+	if _, err = tx.Exec(query1, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID); err != nil {
+		tx.Rollback()
+		return 0, err
 	}
-	// 删除用药计划
-	_, err = begin.Exec(query2, course.CourseID)
-	if err != nil {
-		err := begin.Rollback()
-		if err != nil {
-			return 0, err
-		}
+
+	// 删除旧 plan
+	if _, err = tx.Exec(query2, course.CourseID); err != nil {
+		tx.Rollback()
+		return 0, err
 	}
-	// 从新添加用药计划
+
+	// 插入新的 plan 和 plan_record
 	for _, val := range course.CourseStartTimes {
-		result, err := begin.Exec(query3, course.CourseID, course.Amount, course.Type, val)
+		result, err := tx.Exec(query3, course.CourseID, course.Amount, course.Type, val)
 		if err != nil {
-			err := begin.Rollback()
-			if err != nil {
-				return 0, err
-			}
+			tx.Rollback()
+			return 0, err
 		}
+
 		insertId, err := result.LastInsertId()
 		if err != nil {
+			tx.Rollback()
 			return 0, err
 		}
-		_, err = begin.Exec(query4, 0, insertId, val, course.MedicineName, "", 0)
-		if err != nil {
-			err = begin.Rollback()
-			if err != nil {
-				return 0, err
-			}
+
+		// 构造实际时间，如果需要加日期前缀
+		actualTime := val
+		if !strings.Contains(val, date) {
+			actualTime = fmt.Sprintf("%s %s", date, val)
+		}
+
+		if _, err = tx.Exec(query4, course.UserId, insertId, actualTime, course.MedicineName, "", 0); err != nil {
+			tx.Rollback()
+			return 0, err
 		}
 	}
-	//_, err = begin.Exec(query3, course.CourseID, course.Amount, course.Type, course.PlanTime)
-	//if err != nil {
-	//	err := begin.Rollback()
-	//	if err != nil {
-	//		return 0, err
-	//	}
-	//}
-	err = begin.Commit()
-	if err != nil {
+
+	if err = tx.Commit(); err != nil {
 		return 0, err
 	}
-	return 1, err
+
+	return 1, nil
 }
+
+//func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64, error) {
+//	dateTimes := strings.Split(course.CourseStartTime, " ")
+//	date := dateTimes[0]
+//	// 更新Course用例
+//	query1 := "UPDATE medicine_course " +
+//		"SET medicine_type = ?, medicine_timing = ?, course_start_time = ? " +
+//		"WHERE id = ?"
+//	// 删除plan记录
+//	query2 := "DELETE " +
+//		"FROM medicine_plan " +
+//		"WHERE medicine_id = ? "
+//	// 重新插入 plan 记录
+//	query3 := "INSERT " +
+//		"INTO medicine_plan (medicine_id, amount, type, plan_time) " +
+//		"VALUES (?, ?, ?, ?) "
+//	// 插入记录
+//	query4 := "INSERT " +
+//		"INTO medicine_plan_record(user_id, plan_id, actual_time, medicine_name, memo, status) " +
+//		"VALUES (?, ?, ?, ?, ?, ?)"
+//
+//	begin, err := MysqlClient.Begin()
+//	if err != nil {
+//		return 0, err
+//	}
+//	// 更新用药方案
+//	_, err = begin.Exec(query1, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID)
+//	if err != nil {
+//		err := begin.Rollback()
+//		if err != nil {
+//			return 0, err
+//		}
+//	}
+//	// 删除用药计划
+//	_, err = begin.Exec(query2, course.CourseID)
+//	if err != nil {
+//		err := begin.Rollback()
+//		if err != nil {
+//			return 0, err
+//		}
+//	}
+//	// 从新添加用药计划
+//	for _, val := range course.CourseStartTimes {
+//		result, err := begin.Exec(query3, course.CourseID, course.Amount, course.Type, val)
+//		if err != nil {
+//				begin.Rollback()
+//				return 0, err
+//			}
+//		}
+//		insertId, err := result.LastInsertId()
+//		if err != nil {
+//			return 0, err
+//		}
+//		_, err = begin.Exec(query4, course.UserId, insertId, date+" "+val, course.MedicineName, "", 0)
+//		if err != nil {
+//			err = begin.Rollback()
+//			if err != nil {
+//				return 0, err
+//			}
+//		}
+//	}
+//	err = begin.Commit()
+//	if err != nil {
+//		return 0, err
+//	}
+//	return 1, err
+//}
 
 func (repo *CourseRepository) UpdateCourseStatusByID(course *model.Course) (int64, error) {
 	query := "UPDATE medicine_course " +
