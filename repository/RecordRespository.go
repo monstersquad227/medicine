@@ -5,8 +5,8 @@ import "medicine/model"
 type RecordRepository struct{}
 
 func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
-	query := "SELECT id, medicine_name, actual_time, memo, status " +
-		"FROM medicine_plan_record WHERE user_id = ? AND is_checked = 1"
+	query := "SELECT id, medicine_name, actual_time, memo, status, is_checked " +
+		"FROM medicine_plan_record WHERE user_id = ? "
 	rows, err := MysqlClient.Query(query, userId)
 	if err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func (repo *RecordRepository) List(userId int) ([]*model.RecordModel, error) {
 	data := make([]*model.RecordModel, 0)
 	for rows.Next() {
 		obj := model.RecordModel{}
-		err = rows.Scan(&obj.ID, &obj.MedicineName, &obj.ActualTime, &obj.Memo, &obj.Status)
+		err = rows.Scan(&obj.ID, &obj.MedicineName, &obj.ActualTime, &obj.Memo, &obj.Status, &obj.IsChecked)
 		if err != nil {
 			return nil, err
 		}

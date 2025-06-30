@@ -23,6 +23,7 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 		MedicineName string  `json:"medicine_name"`
 		Memo         *string `json:"memo"`
 		Status       int     `json:"status"`
+		IsChecked    int     `json:"is_checked"`
 	}
 
 	type GroupedContentItem struct {
@@ -47,6 +48,7 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 			MedicineName: value.MedicineName,
 			Memo:         value.Memo,
 			Status:       value.Status,
+			IsChecked:    value.IsChecked,
 		}
 
 		groupMap[dateOnly] = append(groupMap[dateOnly], item)
