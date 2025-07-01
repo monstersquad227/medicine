@@ -15,7 +15,7 @@ type JobData struct {
 	MedicineName string `json:"medicine_name"`
 }
 
-func TestJob(t *testing.T) {
+func TestGenerateSql(t *testing.T) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s", "root", "1qaz@WSX", "47.103.98.61", "3306", "medicine", "utf8")
 	MysqlClient, err := sql.Open("mysql", dsn)
 	if err != nil {

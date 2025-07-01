@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-sql-driver/mysql v1.9.2
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/spf13/viper v1.20.1
 )
 
