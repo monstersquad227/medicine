@@ -119,3 +119,15 @@ func (repo *PlanRepository) CreatePlan(r *model.CourseAndPlan) (int64, error) {
 func (repo *PlanRepository) UpdatePlan(plan *model.Plan) (int64, error) {
 	return 0, nil
 }
+
+func (repo *PlanRepository) GetPlanTimeByIdAndUserID(id int) (string, error) {
+	query := "SELECT plan_time " +
+		"FROM medicine_plan " +
+		"WHERE id = ? "
+	var planTime string
+	err := MysqlClient.QueryRow(query, id).Scan(&planTime)
+	if err != nil {
+		return "", err
+	}
+	return planTime, nil
+}

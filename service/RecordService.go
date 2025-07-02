@@ -11,6 +11,7 @@ import (
 
 type RecordService struct {
 	RecordRepository *repository.RecordRepository
+	PlanRepository   *repository.PlanRepository
 }
 
 func (svc *RecordService) Fetch(userID int) ([]*model.RecordModel, error) {
@@ -84,19 +85,35 @@ func (svc *RecordService) Update(record *model.RecordModel) (int64, error) {
 		数据库中第一次插入的actual_time 为添加 course 的时间
 		计算数据库记录的记录的actual_time 与 实际传入的 actual_time 时间相差多少分钟，15内 status=0 正常打卡 反之异常
 	*/
-	actualTime, err := svc.RecordRepository.GetActualTimeByPlanIDANDUserID(record.PlanID, record.UserID)
+	today := time.Now().Format("2006-01-02")
+	planTime, err := svc.PlanRepository.GetPlanTimeByIdAndUserID(record.PlanID)
 	if err != nil {
 		return 0, err
 	}
-	actualTimeParse, err := time.Parse("2006-01-02 15:04:05", actualTime)
+	planTimeParse, err := time.Parse("2006-01-02 15:04", today+" "+planTime)
 	if err != nil {
 		return 0, err
 	}
-	recordActualTimeParse, err := time.Parse("2006-01-02 15:04:05", record.ActualTime)
+	actualTime := time.Now().Format("2006-01-02 15:04")
+	actualTimeParse, err := time.Parse("2006-01-02 15:04", actualTime)
 	if err != nil {
 		return 0, err
 	}
-	diff := recordActualTimeParse.Sub(actualTimeParse)
+
+	//actualTime, err := svc.RecordRepository.GetActualTimeByPlanIDANDUserID(record.PlanID, record.UserID)
+	//if err != nil {
+	//	return 0, err
+	//}
+	//actualTimeParse, err := time.Parse("2006-01-02 15:04:05", actualTime)
+	//if err != nil {
+	//	return 0, err
+	//}
+	//recordActualTimeParse, err := time.Parse("2006-01-02 15:04:05", record.ActualTime)
+	//if err != nil {
+	//	return 0, err
+	//}
+	//diff := recordActualTimeParse.Sub(actualTimeParse)
+	diff := actualTimeParse.Sub(planTimeParse)
 	minutes := math.Abs(diff.Minutes())
 	if minutes <= 15 {
 		record.Status = 0

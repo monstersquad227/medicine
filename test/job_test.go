@@ -69,3 +69,26 @@ func TestGenerateSql(t *testing.T) {
 		log.Println(lastId)
 	}
 }
+
+func TestXXX(T *testing.T) {
+	planTime := "16:16"
+	today := time.Now().Format("2006-01-02")
+	recordTimeParse, err := time.Parse("2006-01-02 15:04", today+" "+planTime)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	actualTime := time.Now().Format("2006-01-02 15:04")
+	actualTimeParse, err := time.Parse("2006-01-02 15:04", actualTime)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	diff := actualTimeParse.Sub(recordTimeParse)
+	if diff.Minutes() <= 15 {
+		fmt.Println("小于15分钟")
+	} else {
+		fmt.Println("大于15分钟")
+	}
+
+}

@@ -41,7 +41,7 @@ func (repo *UserRepository) GetUserById(id int64) (*model.User, error) {
 
 func (repo *UserRepository) GetUserInfo(phone string) (*model.User, error) {
 	user := &model.User{}
-	query := "SELECT * " +
+	query := "SELECT id, nickname, image, phone_num, huawei_id, password, created_at, updated_at " +
 		"FROM user WHERE phone_num = ?"
 	err := MysqlClient.QueryRow(query, phone).Scan(
 		&user.ID,
