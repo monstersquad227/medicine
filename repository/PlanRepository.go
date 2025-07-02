@@ -116,9 +116,9 @@ func (repo *PlanRepository) CreatePlan(r *model.CourseAndPlan) (int64, error) {
 	return insertedID, nil
 }
 
-func (repo *PlanRepository) UpdatePlan(plan *model.Plan) (int64, error) {
-	return 0, nil
-}
+//func (repo *PlanRepository) UpdatePlan(plan *model.Plan) (int64, error) {
+//	return 0, nil
+//}
 
 func (repo *PlanRepository) GetPlanTimeByIdAndUserID(id int) (string, error) {
 	query := "SELECT plan_time " +

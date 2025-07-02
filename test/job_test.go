@@ -71,7 +71,7 @@ func TestGenerateSql(t *testing.T) {
 }
 
 func TestXXX(T *testing.T) {
-	planTime := "16:16"
+	planTime := "17:30"
 	today := time.Now().Format("2006-01-02")
 	recordTimeParse, err := time.Parse("2006-01-02 15:04", today+" "+planTime)
 	if err != nil {

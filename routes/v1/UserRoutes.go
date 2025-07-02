@@ -15,9 +15,9 @@ func UserRegister(api *gin.RouterGroup) {
 		},
 	}
 
-	api.POST("user/login", ctrl.UserLogin)
-	api.POST("user/loginV2", ctrl.UserLoginV2)
-	api.PUT("user/:id", ctrl.UserUpdate)
-	api.PUT("user/:id/nickname", ctrl.UserUpdateNickname)
-	api.PUT("user/:id/phone", ctrl.UserUpdatePhone)
+	api.POST("user/loginV2", ctrl.UserLoginV2) // √
+	//api.POST("user/login", ctrl.UserLogin)
+	//api.PUT("user/:id", ctrl.UserUpdate)
+	//api.PUT("user/:id/nickname", ctrl.UserUpdateNickname)
+	//api.PUT("user/:id/phone", ctrl.UserUpdatePhone)
 }

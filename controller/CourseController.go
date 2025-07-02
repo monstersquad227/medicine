@@ -75,28 +75,6 @@ func (ctrl *CourseController) UpdateCourseV2(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.Success(result))
 }
 
-func (ctrl *CourseController) PatchCourseStatus(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	req := &model.Course{}
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	req.ID = id
-
-	result, err := ctrl.CourseService.PatchCourseStatus(req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
-		return
-	}
-	c.JSON(http.StatusOK, utils.Success(result))
-}
-
 func (ctrl *CourseController) DeleteCourse(c *gin.Context) {
 	req := &model.Course{}
 	if err := c.ShouldBindJSON(&req); err != nil {

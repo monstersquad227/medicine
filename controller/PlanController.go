@@ -57,25 +57,25 @@ func (ctrl *PlanController) CreatePlan(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.Success(result))
 }
 
-func (ctrl *PlanController) UpdatePlan(c *gin.Context) {
-	req := &model.Plan{}
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	result, err := ctrl.PlanService.Update(req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
-		return
-	}
-	c.JSON(http.StatusOK, utils.Success(result))
-}
+//func (ctrl *PlanController) UpdatePlan(c *gin.Context) {
+//	req := &model.Plan{}
+//	if err := c.ShouldBindJSON(req); err != nil {
+//		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	result, err := ctrl.PlanService.Update(req)
+//	if err != nil {
+//		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	c.JSON(http.StatusOK, utils.Success(result))
+//}
 
-func (ctrl *PlanController) PatchPlan(c *gin.Context) {
-	req := &model.Plan{}
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	c.JSON(http.StatusOK, utils.Success(nil))
-}
+//func (ctrl *PlanController) PatchPlan(c *gin.Context) {
+//	req := &model.Plan{}
+//	if err := c.ShouldBindJSON(req); err != nil {
+//		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	c.JSON(http.StatusOK, utils.Success(nil))
+//}

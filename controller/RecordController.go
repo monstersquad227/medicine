@@ -30,25 +30,25 @@ func (ctrl *RecordController) ListRecord(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.Success(result))
 }
 
-func (ctrl *RecordController) CreateRecord(c *gin.Context) {
-	userID := c.Param("id")
-	id, err := strconv.Atoi(userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	req := &model.RecordModel{}
-	if err = c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
-		return
-	}
-	result, err := ctrl.RecordService.Create(id, req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
-		return
-	}
-	c.JSON(http.StatusOK, utils.Success(result))
-}
+//func (ctrl *RecordController) CreateRecord(c *gin.Context) {
+//	userID := c.Param("id")
+//	id, err := strconv.Atoi(userID)
+//	if err != nil {
+//		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	req := &model.RecordModel{}
+//	if err = c.ShouldBindJSON(req); err != nil {
+//		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	result, err := ctrl.RecordService.Create(id, req)
+//	if err != nil {
+//		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
+//		return
+//	}
+//	c.JSON(http.StatusOK, utils.Success(result))
+//}
 
 func (ctrl *RecordController) UpdateRecord(c *gin.Context) {
 	userID := c.Param("id")

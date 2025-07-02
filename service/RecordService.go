@@ -75,27 +75,30 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 	return groupedResult, nil
 }
 
-func (svc *RecordService) Create(userID int, record *model.RecordModel) (int64, error) {
-	record.UserID = userID
-	return svc.RecordRepository.Create(record)
-}
+//func (svc *RecordService) Create(userID int, record *model.RecordModel) (int64, error) {
+//	record.UserID = userID
+//	return svc.RecordRepository.Create(record)
+//}
 
 func (svc *RecordService) Update(record *model.RecordModel) (int64, error) {
 	/*
-		数据库中第一次插入的actual_time 为添加 course 的时间
-		计算数据库记录的记录的actual_time 与 实际传入的 actual_time 时间相差多少分钟，15内 status=0 正常打卡 反之异常
+		1. 查询 plan_time 字段（17:30），知道改药品的用药时间
+		2. 通过前端传过来的actual_time时间（2025-07-02 17:00）
+		3. 用 actual_time - plan_time 查看多长时间
+			3.1
 	*/
-	today := time.Now().Format("2006-01-02")
+	actualTime := strings.Split(record.ActualTime, " ")
+	//today := time.Now().Format("2006-01-02")
 	planTime, err := svc.PlanRepository.GetPlanTimeByIdAndUserID(record.PlanID)
 	if err != nil {
 		return 0, err
 	}
-	planTimeParse, err := time.Parse("2006-01-02 15:04", today+" "+planTime)
+	planTimeParse, err := time.Parse("2006-01-02 15:04", actualTime[0]+" "+planTime)
 	if err != nil {
 		return 0, err
 	}
-	actualTime := time.Now().Format("2006-01-02 15:04")
-	actualTimeParse, err := time.Parse("2006-01-02 15:04", actualTime)
+	//actualTime := time.Now().Format("2006-01-02 15:04")
+	actualTimeParse, err := time.Parse("2006-01-02 15:04", record.ActualTime)
 	if err != nil {
 		return 0, err
 	}

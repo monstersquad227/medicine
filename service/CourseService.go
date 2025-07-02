@@ -69,10 +69,6 @@ func (svc *CourseService) Modify(course *model.CourseAndPlan) (int64, error) {
 	return svc.CourseRepo.UpdateCourseV2(course)
 }
 
-func (svc *CourseService) PatchCourseStatus(course *model.Course) (int64, error) {
-	return svc.CourseRepo.UpdateCourseStatusByID(course)
-}
-
 func (svc *CourseService) Delete(course *model.Course) (int64, error) {
 	return svc.CourseRepo.RemoveCourse(course)
 }
