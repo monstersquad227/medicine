@@ -74,7 +74,7 @@ func (repo *PlanRepository) ListPlanV2(id int, startTime, endTime string) ([]*mo
 		"        OR mpr.actual_time BETWEEN ? AND ? " +
 		"    ) " +
 		"ORDER BY " +
-		"    mp.plan_time ASC;"
+		"    mp.plan_time ASC, mp.id ASC;"
 	rows, err := MysqlClient.Query(query, id, id, startTime, endTime)
 	if err != nil {
 		return nil, err
