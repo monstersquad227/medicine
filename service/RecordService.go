@@ -24,6 +24,7 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 		MedicineName string  `json:"medicine_name"`
 		Memo         *string `json:"memo"`
 		Status       int     `json:"status"`
+		Time         string  `json:"time"`
 		IsChecked    int     `json:"is_checked"`
 	}
 
@@ -43,12 +44,14 @@ func (svc *RecordService) FetchV2(userID int) (interface{}, error) {
 		//	continue // 跳过该条记录，而不是整体中止
 		//}
 		dateOnly := strings.Split(value.ActualTime, " ")[0]
+		timeOnly := strings.Split(value.ActualTime, " ")[1]
 
 		item := ContentDetail{
 			ID:           value.ID,
 			MedicineName: value.MedicineName,
 			Memo:         value.Memo,
 			Status:       value.Status,
+			Time:         timeOnly,
 			IsChecked:    value.IsChecked,
 		}
 
