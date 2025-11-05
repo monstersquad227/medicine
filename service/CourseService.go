@@ -1,9 +1,11 @@
 package service
 
 import (
+	"errors"
 	"medicine/model"
 	"medicine/repository"
 	"strings"
+	"time"
 )
 
 type CourseService struct {
@@ -71,4 +73,38 @@ func (svc *CourseService) Modify(course *model.CourseAndPlan) (int64, error) {
 
 func (svc *CourseService) Delete(course *model.Course) (int64, error) {
 	return svc.CourseRepo.UpdateCourseStatusByID(course)
+}
+
+func (svc *CourseService) Restore(course *model.Course) (int64, error) {
+	// 恢复用药方案，状态置为 0
+	_, err := svc.CourseRepo.UpdateCourseStatusByID(course)
+	if err != nil {
+		return 1, err
+	}
+
+	// 查看当天是否有打卡记录
+	ids, err := svc.PlanRepo.GetPlanIDsByCourseID(course.ID)
+	if err != nil {
+		return 1, err
+	}
+
+	if len(ids) == 0 {
+		return 1, errors.New("没有原方案计划")
+	}
+
+	today := time.Now().Format("2006-01-02")
+	startTime := today + " 00:00:00"
+	endTime := today + " 23:59:59"
+
+	for _, id := range ids {
+		ok, err := svc.RecordRepo.HasTodayRecordByPlanID(id, startTime, endTime)
+		if err != nil {
+			return 0, err
+		}
+		if ok == false {
+			// 创建今天的用药记录
+		}
+	}
+
+	return 0, nil
 }

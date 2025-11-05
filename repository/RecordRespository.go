@@ -57,3 +57,17 @@ func (repo *RecordRepository) GetActualTimeByPlanIDANDUserID(planID, userID int)
 	}
 	return actualTime, nil
 }
+
+func (repo *RecordRepository) HasTodayRecordByPlanID(planId int64, startTime, endTime string) (bool, error) {
+	query := "SELECT count(id) " +
+		"FROM medicine_plan_record " +
+		"WHERE plan_id = ? " +
+		"    AND actual_time BETWEEN ? AND ? "
+	var count int
+	err := MysqlClient.QueryRow(query, planId, startTime, endTime).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+
+}
