@@ -14,5 +14,5 @@ type CoursePartial struct {
 	MedicineType    int     `json:"medicine_type"`               // 药物方式 0: 内服；1: 外用
 	MedicineTiming  int     `json:"medicine_timing,omitempty"`   // 用药时机 0: 不限；1:饭前用药；2: 饭后用药；3: 随餐用药；4: 睡前用药
 	CourseStartTime string  `json:"course_start_time,omitempty"` // 用药开始时间
-	Status          int     `json:"status,omitempty"`            // 方案状态 0: 生效；1: 废弃
+	Status          int     `json:"status"`                      // 方案状态 0: 生效；1: 废弃
 }

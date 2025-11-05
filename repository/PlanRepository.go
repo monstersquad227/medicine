@@ -69,6 +69,7 @@ func (repo *PlanRepository) ListPlanV2(id int, startTime, endTime string) ([]*mo
 		"    AND mpr.user_id = ? " +
 		"WHERE " +
 		"    mc.user_id = ? " +
+		"    AND mc.status = 0 " +
 		"    AND ( " +
 		"        mpr.id IS NULL " +
 		"        OR mpr.actual_time BETWEEN ? AND ? " +

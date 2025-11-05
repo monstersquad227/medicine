@@ -66,7 +66,6 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 		"    medicine_plan mp ON mp.medicine_id = mc.id " +
 		"WHERE " +
 		"    mc.user_id = ? " +
-		"    AND mc.status = 0 " +
 		"GROUP BY " +
 		"    mc.id " +
 		"ORDER BY " +
