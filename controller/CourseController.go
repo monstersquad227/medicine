@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"medicine/model"
 	"medicine/service"
@@ -77,10 +78,12 @@ func (ctrl *CourseController) UpdateCourseV2(c *gin.Context) {
 
 func (ctrl *CourseController) DeleteCourse(c *gin.Context) {
 	req := &model.Course{}
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return
 	}
+	fmt.Println(req.Status)
+	fmt.Println(req.ID)
 	result, err := ctrl.CourseService.Delete(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
