@@ -48,7 +48,7 @@ func (repo *PlanRepository) ListPlan(id int) ([]*model.CourseAndPlan, error) {
 	return data, nil
 }
 
-func (repo *PlanRepository) ListPlanV2(id int, startTime, endTime string) ([]*model.CourseAndPlan, error) {
+func (repo *PlanRepository) ListPlanV2(id, status int, startTime, endTime string) ([]*model.CourseAndPlan, error) {
 	query := "SELECT " +
 		"    mp.id AS plan_id, " +
 		"    mc.medicine_name, " +
@@ -69,14 +69,17 @@ func (repo *PlanRepository) ListPlanV2(id int, startTime, endTime string) ([]*mo
 		"    AND mpr.user_id = ? " +
 		"WHERE " +
 		"    mc.user_id = ? " +
-		"    AND mc.status = 0 " +
+		"    AND (" +
+		"        (? = 0 AND mc.status = 0) OR " +
+		"        (? = 1 AND mc.status IN (0, 1)) " +
+		"    ) " +
 		"    AND ( " +
 		"        mpr.id IS NULL " +
 		"        OR mpr.actual_time BETWEEN ? AND ? " +
 		"    ) " +
 		"ORDER BY " +
 		"    mp.plan_time ASC, mp.id ASC;"
-	rows, err := MysqlClient.Query(query, id, id, startTime, endTime)
+	rows, err := MysqlClient.Query(query, id, id, status, status, startTime, endTime)
 	if err != nil {
 		return nil, err
 	}
