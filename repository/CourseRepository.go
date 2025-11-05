@@ -66,7 +66,6 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 		"    medicine_plan mp ON mp.medicine_id = mc.id " +
 		"WHERE " +
 		"    mc.user_id = ? " +
-		"    AND mc.status = 0 " +
 		"GROUP BY " +
 		"    mc.id " +
 		"ORDER BY " +
@@ -156,6 +155,16 @@ func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64
 		"INTO medicine_plan_record(user_id, plan_id, actual_time, medicine_name, memo, status) " +
 		"VALUES (?, ?, ?, ?, ?, ?)"
 
+	query5 := "SELECT id " +
+		"FROM medicine_plan " +
+		"WHERE medicine_id = ?"
+
+	query6 := "DELETE " +
+		"FROM medicine_plan_record " +
+		"WHERE " +
+		"    plan_id = ? " +
+		"    AND actual_time BETWEEN ? AND ?"
+
 	tx, err := MysqlClient.Begin()
 	if err != nil {
 		return 0, err
@@ -165,6 +174,33 @@ func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64
 	if _, err = tx.Exec(query1, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID); err != nil {
 		tx.Rollback()
 		return 0, err
+	}
+
+	// 查询需要删除的plan id
+	rows, err := tx.Query(query5, course.CourseID)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+
+	var planIDs []int64
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			return 0, err
+		}
+		planIDs = append(planIDs, id)
+	}
+
+	// 删除当日旧 plan 的 record
+	startTime := date + " 00:00:00"
+	endTime := date + " 23:59:59"
+	for _, id := range planIDs {
+		if _, err := tx.Exec(query6, id, startTime, endTime); err != nil {
+			tx.Rollback()
+			return 0, err
+		}
 	}
 
 	// 删除旧 plan
