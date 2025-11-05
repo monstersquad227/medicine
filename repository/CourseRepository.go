@@ -69,6 +69,7 @@ func (repo *CourseRepository) ListCourseV2(userID int) ([]*model.CourseAndPlan, 
 		"GROUP BY " +
 		"    mc.id " +
 		"ORDER BY " +
+		"    mc.status ASC, " +
 		"    mc.id ASC"
 	rows, err := MysqlClient.Query(query, userID)
 	if err != nil {
