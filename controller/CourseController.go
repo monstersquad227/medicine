@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"medicine/model"
 	"medicine/service"
@@ -82,8 +81,7 @@ func (ctrl *CourseController) DeleteCourse(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
 		return
 	}
-	fmt.Println(req.Status)
-	fmt.Println(req.ID)
+
 	result, err := ctrl.CourseService.Delete(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), err))
