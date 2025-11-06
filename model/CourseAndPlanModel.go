@@ -10,6 +10,7 @@ type CourseAndPlan struct {
 	Frequency        int      `json:"frequency,omitempty"`
 	CourseStartTimes []string `json:"course_start_times,omitempty"`
 	PlanTimes        string   `json:"plan_times,omitempty"`
+	RecordStatus     int      `json:"record_status,omitempty"`
 }
 
 type CourseAndPlanAndRecord struct {

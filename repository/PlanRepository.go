@@ -58,7 +58,8 @@ func (repo *PlanRepository) ListPlanV2(id, status int, startTime, endTime string
 		"    mp.type, " +
 		"    mp.plan_time, " +
 		"    IFNULL(mpr.is_checked, 0) AS is_checked, " +
-		"    mpr.id AS record_id " +
+		"    mpr.id AS record_id, " +
+		"    mpr.status AS record_status " +
 		"FROM " +
 		"    medicine_plan mp " +
 		"JOIN " +
@@ -96,7 +97,8 @@ func (repo *PlanRepository) ListPlanV2(id, status int, startTime, endTime string
 			&obj.Type,
 			&obj.PlanTime,
 			&obj.IsChecked,
-			&obj.RecordID); err != nil {
+			&obj.RecordID,
+			&obj.RecordStatus); err != nil {
 			return nil, err
 		}
 		data = append(data, &obj)
