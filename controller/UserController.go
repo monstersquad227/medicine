@@ -29,7 +29,8 @@ func (ctrl *UserController) UserLoginV2(c *gin.Context) {
 
 func (ctrl *UserController) UserPushToken(c *gin.Context) {
 	var req struct {
-		PushToken string `json:"push_token"`
+		PushToken     string `json:"push_token"`
+		NotifyEnabled bool   `json:"notify_enabled"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.Error(1, err.Error(), err))
@@ -42,7 +43,7 @@ func (ctrl *UserController) UserPushToken(c *gin.Context) {
 		return
 	}
 
-	result, err := ctrl.UserService.UserUpdatePushToken(phone.(string), req.PushToken)
+	result, err := ctrl.UserService.UserUpdatePushToken(phone.(string), req.PushToken, req.NotifyEnabled)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.Error(1, err.Error(), nil))
 		return

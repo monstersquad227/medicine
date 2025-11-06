@@ -4,7 +4,7 @@ import "medicine/model"
 
 type UserInterface interface {
 	UserLoginV22(code string) (map[string]interface{}, error)
-	UserUpdatePushToken(phone, pushToken string) (int64, error)
+	UserUpdatePushToken(phone, pushToken string, isEnabled bool) (int64, error)
 }
 
 type CourseInterface interface {
