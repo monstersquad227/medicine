@@ -107,25 +107,31 @@ func (svc *CourseService) Delete(course *model.Course) (int64, error) {
 }
 
 func (svc *CourseService) Restore(course *model.Course) (int64, error) {
-	// 恢复用药方案，状态置为 0
-	_, err := svc.CourseRepo.UpdateCourseStatusByID(course)
-	if err != nil {
-		return 1, err
+	// Step 1: 恢复用药方案，状态置为 0
+	if _, err := svc.CourseRepo.UpdateCourseStatusByID(course); err != nil {
+		return 0, fmt.Errorf("failed to update course status: %w", err)
 	}
 
-	// 查看当天是否有打卡记录
+	// Step 2: 获取计划 ID
 	ids, err := svc.PlanRepo.GetPlanIDsByCourseID(course.ID)
 	if err != nil {
-		return 1, err
+		return 0, fmt.Errorf("failed to get plan IDs: %w", err)
 	}
-
 	if len(ids) == 0 {
-		return 1, errors.New("没有原方案计划")
+		return 0, errors.New("no plan IDs found for this course")
 	}
 
+	// Step 3: 计算今日起止时间
 	today := time.Now().Format("2006-01-02")
 	startTime := today + " 00:00:00"
 	endTime := today + " 23:59:59"
+
+	// 构建record数据
+	record := &model.RecordModel{
+		UserID:       course.UserId,
+		MedicineName: course.MedicineName,
+		ActualTime:   startTime,
+	}
 
 	for _, id := range ids {
 		ok, err := svc.RecordRepo.HasTodayRecordByPlanID(id, startTime, endTime)
@@ -134,8 +140,16 @@ func (svc *CourseService) Restore(course *model.Course) (int64, error) {
 		}
 		if ok == false {
 			// 创建今天的用药记录
+			record.PlanID = int(id)
+			result, err := svc.RecordRepo.Create(record)
+			if err != nil {
+				return 0, err
+			}
+			if result == 0 {
+				return 0, nil
+			}
 		}
 	}
 
-	return 0, nil
+	return 1, nil
 }
