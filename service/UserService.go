@@ -87,8 +87,14 @@ func (svc *UserService) UserLoginV22(code string) (map[string]interface{}, error
 	return resp, nil
 }
 
-func (svc *UserService) UserUpdatePushToken(phone, pushToken string) (int64, error) {
-	return svc.UserRepo.UpdatePushToken(phone, pushToken)
+func (svc *UserService) UserUpdatePushToken(phone, pushToken string, isEnabled bool) (int64, error) {
+	var enable int
+	if isEnabled == true {
+		enable = 1
+	} else {
+		enable = 0
+	}
+	return svc.UserRepo.UpdatePushToken(phone, pushToken, enable)
 }
 
 //func (svc *UserService) UserUpdate(user *model.User) error {

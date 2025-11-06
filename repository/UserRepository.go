@@ -117,10 +117,11 @@ func (repo *UserRepository) UpdatePhone(id int, phoneNum string) (int64, error) 
 	return rowsAffected, nil
 }
 
-func (repo *UserRepository) UpdatePushToken(phone, pushToken string) (int64, error) {
+func (repo *UserRepository) UpdatePushToken(phone, pushToken string, isEnabled int) (int64, error) {
 	query := "UPDATE user " +
-		"SET push_token = ? WHERE phone_num = ?"
-	exec, err := MysqlClient.Exec(query, pushToken, phone)
+		"SET push_token = ?, notify_enabled = ? " +
+		"WHERE phone_num = ?"
+	exec, err := MysqlClient.Exec(query, pushToken, isEnabled, phone)
 	if err != nil {
 		return 0, err
 	}
