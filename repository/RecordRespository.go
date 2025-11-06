@@ -69,5 +69,19 @@ func (repo *RecordRepository) HasTodayRecordByPlanID(planId int64, startTime, en
 		return false, err
 	}
 	return count > 0, nil
+}
 
+func (repo *RecordRepository) DeleteTodayRecordsByPlanID(planId int64, startTime, endTime string) (bool, error) {
+	query := "DELETE " +
+		"FROM medicine_plan_record " +
+		"WHERE plan_id = ? AND actual_time BETWEEN ? AND ? "
+	result, err := MysqlClient.Exec(query, planId, startTime, endTime)
+	if err != nil {
+		return false, err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return rows > 0, nil
 }
