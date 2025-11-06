@@ -131,3 +131,25 @@ func (repo *PlanRepository) GetPlanTimeByIdAndUserID(id int) (string, error) {
 	}
 	return planTime, nil
 }
+
+func (repo *PlanRepository) GetPlanIDsByCourseID(id int) ([]int64, error) {
+	query := "SELECT id " +
+		"FROM medicine_plan " +
+		"WHERE medicine_id = ? "
+	rows, err := MysqlClient.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var planIDs []int64
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		planIDs = append(planIDs, id)
+	}
+	return planIDs, nil
+}

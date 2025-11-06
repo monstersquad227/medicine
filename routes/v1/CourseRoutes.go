@@ -18,5 +18,5 @@ func CourseRegister(api *gin.RouterGroup) {
 	api.POST("course", ctrl.CreateCourse)
 	api.DELETE("course", ctrl.DeleteCourse)
 	api.PUT("course", ctrl.UpdateCourseV2)
-
+	api.POST("course/restore", ctrl.RestoreCourse)
 }

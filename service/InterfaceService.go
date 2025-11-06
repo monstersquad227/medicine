@@ -13,6 +13,7 @@ type CourseInterface interface {
 	Update(course *model.Course) (int64, error)
 	Modify(course *model.CourseAndPlan) (int64, error)
 	Delete(course *model.Course) (int64, error)
+	Restore(course *model.Course) (int64, error)
 }
 
 type PlanServiceInterface interface {
