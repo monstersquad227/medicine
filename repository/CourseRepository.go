@@ -142,7 +142,7 @@ func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64
 	date := dateTimes[0]
 
 	query1 := "UPDATE " +
-		"medicine_course SET medicine_type = ?, medicine_timing = ?, course_start_time = ? " +
+		"medicine_course SET medicine_name = ?, medicine_type = ?, medicine_timing = ?, course_start_time = ? " +
 		"WHERE id = ?"
 
 	query2 := "DELETE " +
@@ -172,7 +172,7 @@ func (repo *CourseRepository) UpdateCourseV2(course *model.CourseAndPlan) (int64
 	}
 
 	// 更新 course
-	if _, err = tx.Exec(query1, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID); err != nil {
+	if _, err = tx.Exec(query1, course.MedicineName, course.MedicineType, course.MedicineTiming, course.CourseStartTime, course.CourseID); err != nil {
 		tx.Rollback()
 		return 0, err
 	}
